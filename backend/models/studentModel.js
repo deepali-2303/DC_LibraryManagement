@@ -19,6 +19,10 @@ const studentSchema = mongoose.Schema({
         type: String,
         required: [true, "Please add a password"]
     },
+    books: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Book"
+    }]
 }, {
     timestamps: true
 })
