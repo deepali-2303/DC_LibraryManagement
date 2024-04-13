@@ -13,8 +13,8 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
 // app.use("/api/delivery", require("./routes/addDeliveryPersonRoutes"))
-app.use("/api/mainUser", require("./routes/mainUserRoutes"))
-app.use("/api/deliveryPerson", require("./routes/deliveryPersonRoutes"))
+app.use("/api/admin", require("./routes/adminRoutes"))
+app.use("/api/student", require("./routes/studentRoutes"))
 
 app.use(errorHandler)
 

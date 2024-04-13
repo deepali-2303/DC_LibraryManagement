@@ -1,9 +1,9 @@
 const jwt = require("jsonwebtoken")
 const asyncHandler = require("express-async-handler");
-const User = require("../models/userModel")
-const DeliveryPerson = require("../models/deliveryPersonModel")
+const User = require("../models/adminModel")
+const Student = require("../models/studentModel")
 
-const protect = asyncHandler(async (req, res, next) => {
+const protect = asyncHandler(async(req, res, next) => {
     let token
 
     if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
@@ -14,10 +14,10 @@ const protect = asyncHandler(async (req, res, next) => {
 
             let user;
             // Check the URL to determine which model to use
-            if (req.originalUrl.includes("/api/mainUser")) {
+            if (req.originalUrl.includes("/api/admin")) {
                 user = await User.findById(decoded.id).select("-password");
-            } else if (req.originalUrl.includes("/api/deliveryPerson")) {
-                user = await DeliveryPerson.findById(decoded.id).select("-password");
+            } else if (req.originalUrl.includes("/api/student")) {
+                user = await Student.findById(decoded.id).select("-password");
             }
 
             if (!user) {

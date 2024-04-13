@@ -1,11 +1,6 @@
 const mongoose = require("mongoose");
 
-const deliverySchema = mongoose.Schema({
-    owner:{
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: "User"
-    },
+const adminSchema = mongoose.Schema({
     name: {
         type: String,
         required: [true, "Please add a name"]
@@ -19,8 +14,12 @@ const deliverySchema = mongoose.Schema({
         type: String,
         required: [true, "Please add a password"]
     },
+    students: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Student"
+    }]
 }, {
     timestamps: true
 })
 
-module.exports = mongoose.model("DeliveryPerson", deliverySchema);
+module.exports = mongoose.model("Admin", adminSchema);

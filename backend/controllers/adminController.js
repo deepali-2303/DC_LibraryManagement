@@ -1,15 +1,15 @@
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcryptjs")
 const asyncHandler = require("express-async-handler");
-const User = require("../models/userModel")
-const DeliveryPerson = require("../models/deliveryPersonModel")
+const Admin = require("../models/adminModel")
+const Student = require("../models/studentModel")
 // const { errorHandler } = require("../middleware/errorMiddleware");
 
 
 // @desc Register new User
 // @route POST /api/users
 // @access Public
-const registerUser = asyncHandler(async (req, res) => {
+const registerAdmin = asyncHandler(async(req, res) => {
     const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
@@ -17,27 +17,27 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new Error("Please add all fields")
     }
 
-    const userExists = await User.findOne({ email });
-    if (userExists) {
+    const adminExists = await Admin.findOne({ email });
+    if (adminExists) {
         res.status(400)
-        throw new Error("User already exists")
+        throw new Error("Admin already exists")
     }
 
     const salt = await bcrypt.genSalt(10)
     const hashedPassword = await bcrypt.hash(password, salt)
 
-    const user = await User.create({
+    const admin = await Admin.create({
         name: name,
         email: email,
         password: hashedPassword
     })
 
-    if (user) {
+    if (admin) {
         res.status(201).json({
-            _id: user.id,
-            name: user.name,
-            email: user.email,
-            token: generateToken(user._id)
+            _id: admin.id,
+            name: admin.name,
+            email: admin.email,
+            token: generateToken(admin._id)
         })
     } else {
         res.status(400)
@@ -48,17 +48,17 @@ const registerUser = asyncHandler(async (req, res) => {
 // @desc Authenticate a User
 // @route POST /api/users
 // @access Public
-const loginUser = asyncHandler(async (req, res) => {
+const loginAdmin = asyncHandler(async(req, res) => {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email })
+    const admin = await Admin.findOne({ email })
 
-    if (user && (await bcrypt.compare(password, user.password))) {
+    if (admin && (await bcrypt.compare(password, admin.password))) {
         res.json({
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            token: generateToken(user._id)
+            id: admin.id,
+            name: admin.name,
+            email: admin.email,
+            token: generateToken(admin._id)
         })
     } else {
         res.status(400)
@@ -70,21 +70,21 @@ const loginUser = asyncHandler(async (req, res) => {
 // @desc Get User data
 // @route GET /api/users/me
 // @access Private
-const getMe = asyncHandler(async (req, res) => {
-    const{_id, name, email, deliveryPersons} = await User.findById(req.user.id)
+const getMe = asyncHandler(async(req, res) => {
+    const { _id, name, email, students } = await Admin.findById(req.user.id)
 
     res.status(200).json({
         id: _id,
         name,
         email,
-        deliveryPersons
+        students
     })
 })
 
 // @desc Register Delivery Person
 // @route GET /api/users/registerDelivery
 // @access Private
-const registerDeliveryPerson = asyncHandler(async (req, res) => {
+const registerStudent = asyncHandler(async(req, res) => {
     const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
@@ -92,41 +92,41 @@ const registerDeliveryPerson = asyncHandler(async (req, res) => {
         throw new Error("Please add all fields")
     }
 
-    const user = await User.findById(req.user.id);
+    const admin = await Admin.findById(req.user.id);
 
-    if (!user) {
+    if (!admin) {
         res.status(404)
-        throw new Error("User not found");
+        throw new Error("Admin not found");
     }
 
-    const deliveryPersonExists = await DeliveryPerson.findOne({ email });
+    const studentExists = await Student.findOne({ email });
 
-    if (deliveryPersonExists) {
+    if (studentExists) {
         res.status(400)
-        throw new Error("Delivery person already exists");
+        throw new Error("Student already exists");
     }
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const deliveryPerson = await DeliveryPerson.create({
-        owner: user._id, // Assign the registered user as the owner of the delivery person
+    const student = await Student.create({
+        admin: admin._id, // Assign the registered user as the owner of the delivery person
         name: name,
         email: email,
         password: hashedPassword
     });
 
-    if (deliveryPerson) {
+    if (student) {
         // Push the newly created delivery person's ID to the user's deliveryPersons array
-        user.deliveryPersons.push(deliveryPerson._id);
-        await user.save();
+        admin.students.push(student._id);
+        await admin.save();
 
         res.status(201).json({
-            _id: deliveryPerson._id,
-            owner: deliveryPerson.owner.name,
-            name: deliveryPerson.name,
-            email: deliveryPerson.email,
-            token: generateToken(deliveryPerson._id) // Assuming generateToken() generates a token for the delivery person
+            _id: student._id,
+            admin: student.admin.name,
+            name: student.name,
+            email: student.email,
+            token: generateToken(student._id) // Assuming generateToken() generates a token for the delivery person
         });
     } else {
         res.status(400)
@@ -143,8 +143,8 @@ const generateToken = (id) => {
 
 
 module.exports = {
-    registerUser,
-    loginUser,
+    registerAdmin,
+    loginAdmin,
     getMe,
-    registerDeliveryPerson
+    registerStudent
 }
