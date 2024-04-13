@@ -33,7 +33,11 @@ const bookSchema = new mongoose.Schema({
     category:{ 
         type: String, 
         required: [true, "Please add a password"]
-    }
+    },
+    students: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Student"
+  }]
 },
 {
     timestamps:true
