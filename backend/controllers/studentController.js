@@ -13,7 +13,7 @@ const { errorHandler } = require("../middleware/errorMiddleware");
 const registerStudent = asyncHandler(async (req, res) => {
     const { name, email, password } = req.body;
 
-    const admin = await Admin.findById("661a5bd0921d38ef7d268db6");
+    const admin = await Admin.findById("661b9e1957fdc0be1d924487");
     console.log(admin);
     if (!admin) {
         res.status(404)
