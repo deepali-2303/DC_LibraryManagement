@@ -42,7 +42,7 @@ const registerStudent = asyncHandler(async (req, res) => {
     })
 
     if (student) {
-        // Push the newly created delivery person's ID to the user's deliveryPersons array
+ 
         admin.students.push(student._id);
         await admin.save();
 
@@ -51,11 +51,11 @@ const registerStudent = asyncHandler(async (req, res) => {
             admin: admin.name,
             name: student.name,
             email: student.email,
-            token: generateToken(student._id) // Assuming generateToken() generates a token for the delivery person
+            token: generateToken(student._id) // Assuming generateToken() generates a token
         });
     } else {
         res.status(400)
-        throw new Error("Invalid delivery person data");
+        throw new Error("Invalid data");
     }
 })
 

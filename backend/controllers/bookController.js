@@ -12,12 +12,15 @@ const AsyncLock = require('async-lock');
 const lock = new AsyncLock();
 
 const getBooks = asyncHandler(async (req, res) => {
+
+  console.log(req.port);
   // Check if the books are available in the cache
   const cachedBooks = await redisClient.get('books');
 
   if (cachedBooks) {
     // If books are cached, return them from the cache
     console.log('Books retrieved from cache');
+
     return res.json(JSON.parse(cachedBooks));
   }
 
@@ -55,6 +58,9 @@ const addBook = asyncHandler(async (req, res) => {
 
   if (newBook) {
     await newBook.save();
+    const books = await Book.find();
+    await redisClient.set('books', JSON.stringify(books), 'EX', 60);
+    console.log("Cache Updated");
     res.status(201).json({ message: "Book added successfully", book: newBook });
   } else {
     res.status(400);
@@ -111,6 +117,9 @@ const borrowBook = asyncHandler(async (req, res) => {
     student.books.push(book._id);
     await student.save();
 
+    const books = await Book.find();
+    await redisClient.set('books', JSON.stringify(books), 'EX', 60);
+    console.log("Cache Updated");
     // Send a success response with the updated book
     res.json({ message: "Book updated successfully", book: updatedBook });
   });
@@ -158,6 +167,9 @@ const returnBook = asyncHandler(async (req, res) => {
       throw new Error("List not updated");
     }
 
+    const books = await Book.find();
+    await redisClient.set('books', JSON.stringify(books), 'EX', 60);
+    console.log("Cache Updated");
     // Send a success response with the updated book
     res.json({ message: "Book updated successfully", book: updatedBook });
 

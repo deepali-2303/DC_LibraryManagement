@@ -81,8 +81,8 @@ const getMe = asyncHandler(async(req, res) => {
     })
 })
 
-// @desc Register Delivery Person
-// @route GET /api/users/registerDelivery
+// @desc Register 
+// @route GET /api/users/register
 // @access Private
 const registerStudent = asyncHandler(async(req, res) => {
     const { name, email, password } = req.body;
@@ -110,14 +110,14 @@ const registerStudent = asyncHandler(async(req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const student = await Student.create({
-        admin: admin._id, // Assign the registered user as the owner of the delivery person
+        admin: admin._id, // Assign the registered user 
         name: name,
         email: email,
         password: hashedPassword
     });
 
     if (student) {
-        // Push the newly created delivery person's ID to the user's deliveryPersons array
+     
         admin.students.push(student._id);
         await admin.save();
 
@@ -126,11 +126,11 @@ const registerStudent = asyncHandler(async(req, res) => {
             admin: student.admin.name,
             name: student.name,
             email: student.email,
-            token: generateToken(student._id) // Assuming generateToken() generates a token for the delivery person
+            token: generateToken(student._id) // Assuming generateToken() generates a token 
         });
     } else {
         res.status(400)
-        throw new Error("Invalid delivery person data");
+        throw new Error("Invalid Student data");
     }
 });
 
