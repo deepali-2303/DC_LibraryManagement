@@ -88,7 +88,10 @@ const loginStudent = asyncHandler(async (req, res) => {
 // @access Private
 const getMe = asyncHandler(async (req, res) => {
     const { _id, name, email, books } = await Student.findById(req.user.id)
+    const port = req.port;
 
+  // Log the port number
+  console.log('Server is running on port:', port);
     res.status(200).json({
         id: _id,
         name,

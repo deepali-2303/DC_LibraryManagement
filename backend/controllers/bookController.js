@@ -11,8 +11,13 @@ const getBooks = asyncHandler(async (req, res) => {
   const books = await Book.find();
 
   // Send the books as a response
+  // Access the port number from the req object
+  const port = req.port;
+
+  // Log the port number
+  console.log('Server is running on port:', port);
   res.json(books);
-  console.log(books);
+  // console.log(books);
 });
 
 const addBook = asyncHandler(async (req, res) => {
