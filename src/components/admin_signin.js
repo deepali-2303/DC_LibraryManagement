@@ -23,7 +23,7 @@ export const AdminSignin = () => {
     } catch (error) {
       console.error(error);
     }
-    navigate("/home");
+    navigate("/adminhome");
   };
 
   return (

@@ -27,7 +27,7 @@ export const UserSignup = () => {
   };
 
   const handlein= async()=>{
-    navigate("/")
+    navigate("/userpage")
   }
 
   return (

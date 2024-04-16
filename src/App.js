@@ -9,6 +9,7 @@ import { UserSignup } from './components/user_signup'; // Import your UserPage c
 import { UserSignin } from './components/user_signin'; // Import your UserPage component
 import  AdminHome  from './components/admin_home'
 import  AddBook  from './components/add_book'
+import  UserPage  from './components/user_page'; // Import your UserPage component
 function App() {
   return (
     <>
@@ -21,6 +22,7 @@ function App() {
                 <Route path="/usersignin" element={<UserSignin/>} />
                 <Route path="/adminhome" element={<AdminHome/>} />
                 <Route path="/adminaddbook" element={<AddBook/>} />
+                <Route path="/userpage" element={<UserPage/>} />
             </Routes>
         </Router>
     </>

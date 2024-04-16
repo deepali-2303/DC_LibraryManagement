@@ -23,7 +23,7 @@ export const UserSignin = () => {
     } catch (error) {
       console.error(error);
     }
-    navigate("/home");
+    navigate("/userpage");
   };
 
   return (

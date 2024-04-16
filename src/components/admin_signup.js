@@ -27,7 +27,7 @@ export const AdminSignup = () => {
   };
 
   const handlein= async()=>{
-    navigate("/")
+    navigate("/adminsignin")
   }
 
   return (
