@@ -87,6 +87,15 @@ const loginStudent = asyncHandler(async (req, res) => {
   }
 });
 
+
+const logoutStudent = asyncHandler(async (req, res) => {
+  res.clearCookie("token");
+
+  res.status(200).json({ message: "Logout successful" });
+});
+
+
+
 // @desc Get User data
 // @route GET /api/users/me
 // @access Private
@@ -115,4 +124,5 @@ module.exports = {
   loginStudent,
   getMe,
   getStudent,
+  logoutStudent
 };
