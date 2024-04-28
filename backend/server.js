@@ -5,6 +5,7 @@ const port = process.env.PORT || 5000;
 const colors = require("colors");
 const { connectDB } = require("./config/db");
 const Redis = require('ioredis');
+const cors = require('cors');
 
 
 
@@ -12,6 +13,7 @@ connectDB();
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use((req, res, next) => {

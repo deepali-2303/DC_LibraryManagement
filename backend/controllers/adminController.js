@@ -69,7 +69,7 @@ const loginAdmin = asyncHandler(async(req, res) => {
 
 
 const logoutAdmin = asyncHandler(async (req, res) => {
-    res.clearCookie("token");
+    res.clearCookie(req.token);
   
     res.status(200).json({ message: "Logout successful" });
   });

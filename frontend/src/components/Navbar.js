@@ -1,18 +1,31 @@
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
-export const Navbar = () => {
+export const Navbar = ({api, nav, token}) => {
     const navigate = useNavigate();
 
     const logout = async () => {
         try {
-            await axios.post('http://localhost:4000/api/admin/logout');
-            localStorage.removeItem('token');
-            navigate('/loginAdmin');
+            const Token = localStorage.getItem(token);
+            const response = await axios.post(api);
+            localStorage.removeItem(token);
+            if (api.includes('student')) {
+                localStorage.removeItem('studentId');
+            }
+            
+            navigate(nav);
         } catch (error) {
             console.error('Error logging out:', error);
         }
     };
+
+    useEffect(() => {
+        const Token = localStorage.getItem(token);
+        if (!Token) {
+          navigate(nav);
+        }
+      }, [navigate]);
 
 
     return (

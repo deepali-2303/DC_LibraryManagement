@@ -6,7 +6,7 @@ const { protect } = require("../middleware/authMiddleware");
 
 router.post(("/"), registerStudent)
 router.post(("/login"), loginStudent)
-router.post(('/logout'), protect, logoutStudent)
+router.post(('/logout'), logoutStudent)
 router.get(("/me"), protect, getMe)
 router.get(("/listBooks"), protect, getBooks)
 router.post(("/borrowBook"), protect, borrowBook)

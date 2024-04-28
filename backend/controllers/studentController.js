@@ -89,9 +89,9 @@ const loginStudent = asyncHandler(async (req, res) => {
 
 
 const logoutStudent = asyncHandler(async (req, res) => {
-  res.clearCookie("token");
+  res.clearCookie(req.token);
 
-  res.status(200).json({ message: "Logout successful" });
+  res.status(200).json({ message: " Student Logout successful" });
 });
 
 
