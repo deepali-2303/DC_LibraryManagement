@@ -7,7 +7,7 @@ import { BorrowBook } from "../components/BorrowBook";
 import { ReturnBook } from "../components/ReturnBook";
 
 export const StudentHomePage = () => {
-  const api = "http://localhost:4000/api/student/logout";
+  const api = "http://localhost:80/api/student/logout";
   const nav = "/loginStudent";
   const token = "studentToken";
 
@@ -21,7 +21,7 @@ export const StudentHomePage = () => {
     try {
       const Token = localStorage.getItem("studentToken");
       const response = await axios.get(
-        "http://localhost:4000/api/student/listBooks",
+        "http://localhost:80/api/student/listBooks",
         {
           headers: {
             Authorization: `Bearer ${Token}`,

@@ -8,7 +8,7 @@ export const BorrowBook = () => {
   const fetchAvailableBooks = async () => {
     try {
       const token = localStorage.getItem('studentToken');
-      const response = await axios.get('http://localhost:4000/api/student/listBooks', {
+      const response = await axios.get('http://localhost:80/api/student/listBooks', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -27,7 +27,7 @@ export const BorrowBook = () => {
     try {
       const token = localStorage.getItem('studentToken');
       await axios.post(
-        'http://localhost:4000/api/student/borrowBook',
+        'http://localhost:80/api/student/borrowBook',
         { name: bookName, cnt: 1 },
         {
           headers: {

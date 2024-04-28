@@ -10,11 +10,12 @@ export const AdminLogin = () => {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post('http://localhost:4000/api/admin/login', {
+            const response = await axios.post('http://localhost:80/api/admin/login', {
                 email: email,
                 password: password
             });
             const token = response.data.token;
+            console.log(token);
             localStorage.setItem('adminToken', token); 
 
             // Navigate to AdminHome after successful login

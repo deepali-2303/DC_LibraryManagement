@@ -16,7 +16,7 @@ export const AddBook = ({ listBooks }) => {
     try {
       const token = localStorage.getItem('adminToken');
       const response = await axios.post(
-        'http://localhost:4000/api/admin/addBook',
+        'http://localhost:80/api/admin/addBook',
         {
           name: bookName,
           author: author,

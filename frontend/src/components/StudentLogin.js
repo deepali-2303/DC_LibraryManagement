@@ -10,7 +10,7 @@ export const StudentLogin = () => {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post('http://localhost:4000/api/student/login', {
+            const response = await axios.post('http://localhost:80/api/student/login', {
                 email: email,
                 password: password
             });

@@ -18,7 +18,7 @@ export const AdminHomePage = () => {
   const listBooks = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await axios.get('http://localhost:4000/api/admin/listBooks', {
+      const response = await axios.get('http://localhost:80/api/admin/listBooks', {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -36,7 +36,7 @@ export const AdminHomePage = () => {
   const listStudents = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await axios.get('http://localhost:4000/api/admin/listStudents', {
+      const response = await axios.get('http://localhost:80/api/admin/listStudents', {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -62,7 +62,7 @@ export const AdminHomePage = () => {
 
   
 
-  const api = 'http://localhost:4000/api/admin/logout';
+  const api = 'http://localhost:80/api/admin/logout';
   const nav = "/loginAdmin"
   const token = 'adminToken'
 
