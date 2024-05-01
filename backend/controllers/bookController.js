@@ -69,10 +69,79 @@ const addBook = asyncHandler(async (req, res) => {
 });
 
 
+// const borrowBook = asyncHandler(async (req, res) => {
+//   // Wrap the critical section with a lock
+//   await lock.acquire('borrowBookLock', async () => {
+//     console.log("Lock acquired");
+//     const { name, cnt } = req.body;
+
+//     // Retrieve book information from the database
+//     const book = await Book.findOne({ name });
+
+//     if (!book) {
+//       res.status(404);
+//       throw new Error("Book not found");
+//     }
+
+//     // Check if sufficient books are available
+//     if (book.count < cnt) {
+//       res.status(400);
+//       throw new Error("Not sufficient books available");
+//     }
+
+//     // Simulate a delay of 10 seconds to simulate a longer-running operation
+//     await new Promise(resolve => setTimeout(resolve, 10000));
+
+//     // Update the count and status of the book
+//     const newCount = Number(book.count) - Number(cnt);
+//     const updatedBook = await Book.findByIdAndUpdate(
+//       book.id,
+//       { count: newCount, status: newCount === 0 ? "Unavailable" : "Available" },
+//       { new: true }
+//     );
+
+//     if (!updatedBook) {
+//       res.status(500);
+//       throw new Error("Failed to update book");
+//     }
+
+//     // Update the student's borrowed books list
+//     const student = await Student.findById(req.user.id);
+//     if (!student) {
+//       res.status(404);
+//       throw new Error("Student not found");
+//     }
+
+//     book.students.push(student._id);
+//     await book.save();
+//     student.books.push(book._id);
+//     await student.save();
+
+//     const books = await Book.find();
+//     await redisClient.set('books', JSON.stringify(books), 'EX', 60);
+//     console.log("Cache Updated");
+//     // Send a success response with the updated book
+//     res.json({ message: "Book updated successfully", book: updatedBook });
+//   });
+//   console.log("Lock released");
+// });
+
+
 const borrowBook = asyncHandler(async (req, res) => {
-  // Wrap the critical section with a lock
-  await lock.acquire('borrowBookLock', async () => {
-    console.log("Lock acquired");
+  const lockKey = 'borrowBookLock';
+
+  // Try to acquire the lock
+  const lockAcquired = await redisClient.set(lockKey, 'locked', 'NX', 'EX', 60);
+
+  if (!lockAcquired) {
+    // Lock is already active, return an error
+    return res.status(409).json({ error: 'Another operation is already in progress.' });
+  }
+
+  console.log('Lock acquired');
+
+  try {
+    // Your borrowing logic goes here...
     const { name, cnt } = req.body;
 
     // Retrieve book information from the database
@@ -88,11 +157,9 @@ const borrowBook = asyncHandler(async (req, res) => {
       res.status(400);
       throw new Error("Not sufficient books available");
     }
+    // Simulate a delay of 10 seconds
+    await new Promise(resolve => setTimeout(resolve, 5000));
 
-    // Simulate a delay of 10 seconds to simulate a longer-running operation
-    await new Promise(resolve => setTimeout(resolve, 10000));
-
-    // Update the count and status of the book
     const newCount = Number(book.count) - Number(cnt);
     const updatedBook = await Book.findByIdAndUpdate(
       book.id,
@@ -122,11 +189,22 @@ const borrowBook = asyncHandler(async (req, res) => {
     console.log("Cache Updated");
     // Send a success response with the updated book
     res.json({ message: "Book updated successfully", book: updatedBook });
-  });
-  console.log("Lock released");
+
+    console.log('Borrowing logic completed');
+
+    // Send success response
+    res.json({ message: 'Book borrowed successfully' });
+  } catch (error) {
+    // Handle errors
+
+    // If an error occurs, make sure to release the lock
+    console.error('Error occurred, releasing lock:', error);
+  } finally {
+    // Always release the lock after the operation is completed or an error occurs
+    await redisClient.del(lockKey);
+    console.log('Lock released');
+  }
 });
-
-
 
 
 
